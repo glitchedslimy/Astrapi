@@ -1,0 +1,41 @@
+---
+
+import { fetchApi } from '../api/strapi'
+import type { Article } from '../api/models/interfaces/IArticle'
+import Layout from '../layouts/Layout.astro'
+import { Image } from 'astro:assets'
+
+let articles: Article[] = []
+try {
+	articles = await fetchApi<Article[]>({
+		endpoint: 'articles',
+		wrappedByKey: 'data',
+	})
+} catch(e) {
+	console.error(e)
+	return Astro.redirect('/404')
+}
+---
+
+	<Layout title="Astrapi">
+	<body class="bg-slate-950 text-white">
+		<main class="flex flex-col items-center">
+		<h1 class="text-3xl font-bold text-center py-5">Astrapi</h1>
+		<ul class="flex space-x-5">
+			{
+				articles.map((article) => (
+					<a href={`/blog/${article.attributes.Slug}/`} class="bg-slate-900 rounded-lg px-2 py-3 flex flex-col space-y-4 hover:scale-105 transition duration-300" transition:name={article.attributes.Title}>
+					<Image class="rounded" src={article.attributes.cover.smallurl} alt="test" width={500} height={500} />
+					<p class="text-xl font-bold" >
+					{article.attributes.Title}
+				  </p>
+				  <p class="truncate w-80">
+					{article.attributes.Description}
+					</p>
+					</a>
+					))
+				}
+		</ul>
+	</main>
+	</body>
+</Layout>
