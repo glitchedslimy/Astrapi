@@ -1,18 +1,19 @@
 ---
-import { fetchApi } from '../../api/strapi'
-import type { Article } from '../../api/models/interfaces/IArticle'
-import Layout from '../../layouts/Layout.astro'
-import { Image } from 'astro:assets'
+import { fetchApi } from '../../api/strapi';
+import type { Article } from '../../api/models/interfaces/IArticle';
+import Layout from '../../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+import { getImage } from '../../api/lib/image/getImage';
+import ArticleNav from '../../components/articleNav/articleNav.astro';
 
-export const prerender = false
+export const prerender = false;
 
 const { slug } = Astro.params;
-const searchParams  = Astro.url.searchParams;
+const searchParams = Astro.url.searchParams;
 const preview = searchParams.get('preview') ? true : false;
 let article: Article;
 
 try {
-
   article = await fetchApi<Article>({
     endpoint: 'articles',
     wrappedByKey: 'data',
@@ -20,42 +21,40 @@ try {
     query: {
       'filters[Slug][$eq]': slug || '',
     },
-    preview: preview
+    preview: preview,
   });
 
-  if(!article) {
+  if (!article) {
     return Astro.redirect('/404');
   }
-
 } catch (error) {
   return Astro.redirect('/404');
 }
-
 ---
 
 <Layout title={article.attributes.Title}>
-    <main class="" transition:name={article.attributes.Title}>
-      {preview &&
-        <div class="sticky top-0 bg-primary w-full px-2 py-2">
-          <p class="font-semibold text-center">Article is on preview mode, only allowed to editors.</p>
-        </div>
-      }
-      <Image class="w-full object-cover h-96" src={article.attributes.cover.originalurl} alt={article.attributes.Title} width={500} height={500} />
-      <div class="px-32 py-5">
-        <h1 class="text-7xl font-extrabold my-5">{article.attributes.Title}</h1>
-        <p set:html={article.attributes.content}></p>
-      </div>
-    </main>
-      {preview &&
-      <div class="absolute bottom-0">
-          <button id="closePreview" class="sticky bottom-0 px-2 py-2 bg-primary font-semibold rounded-tr-lg hover:bg-primary/60 transition duration-200">Close preview</button>
-        </div>
-      }
-    <script src="/src/api/lib/syntax/prism.js"></script>
-    <script>
-      const button = document.getElementById('closePreview');
+  <ArticleNav />
+  <main class="" transition:name={article.attributes.Title}>
+    <Image
+      class="w-full object-cover h-[45rem] brightness-50"
+      src={getImage(article.attributes.cover)}
+      alt={article.attributes.Title}
+      width={500}
+      height={700}
+    />
+    <div class="px-32 py-5">
+      <h1 class="text-7xl font-extrabold my-5 pb-6 text-primary">{article.attributes.Title}</h1>
+      <p set:html={article.attributes.content} />
+    </div>
+  </main>
+
+  <script src="/src/api/lib/syntax/prism.js"></script>
+  <script>
+    const button = document.getElementById('closePreview');
+    if (button) {
       button.addEventListener('click', () => {
-          window.close()
-      })
-    </script>
-  </Layout>
+        window.close();
+      });
+    }
+  </script>
+</Layout>

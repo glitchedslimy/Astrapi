@@ -7,13 +7,17 @@
         "start": "astro dev",
         "build": "astro build",
         "preview": "astro preview",
-        "astro": "astro"
+        "astro": "astro",
+        "lint": "yarn run eslint --ext .astro,.js,.jsx .",
+        "format": "yarn run prettier --write ."
     },
     "dependencies": {
         "@astrojs/react": "^3.0.3",
         "@astrojs/tailwind": "^5.0.1",
+        "@slimy/hva": "^0.2.5",
         "astro": "^3.2.3",
         "axios": "^1.5.1",
+        "jsdom": "^22.1.0",
         "marked": "^9.1.0",
         "postcss": "^8.4.31",
         "react": "^18.2.0",
@@ -21,6 +25,8 @@
         "tailwindcss": "^3.3.3"
     },
     "devDependencies": {
-        "@astrojs/node": "^6.0.3"
+        "@astrojs/node": "^6.0.3",
+        "@types/jsdom": "^21.1.4",
+        "video.js": "^8.6.0"
     }
 }

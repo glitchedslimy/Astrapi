@@ -1,0 +1,25 @@
+---
+import { Image } from 'astro:assets';
+---
+
+<header class="sticky top-0">
+  <nav class="flex px-8 py-5">
+    <nav class="flex flex-grow justify-start basis-0">
+      <ul>
+        <li>
+          <a href="/">
+            <Image src="/img/Astrapi.png" alt="logo" width={40} height={40} />
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <nav>
+      <ul class="flex [&>li>a]:inline-block [&>li>a]:px-5">
+        <li>
+          <a href="/product" class="hover:text-primary transition duration-200">Home</a>
+          <a href="/blog" class="hover:text-primary transition duration-200">Blog</a>
+        </li>
+      </ul>
+    </nav>
+  </nav>
+</header>
